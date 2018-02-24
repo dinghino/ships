@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "module": "commonjs",
+        "target": "es2017",
+        "lib": ["es6", "dom", "es7"],
+        "types": [
+            "node"
+        ],
+        "outDir": "./dist",
+        "rootDirs": ["src", "tests"],
+        "moduleResolution": "node",
+        "declaration": true
+      },
+      "include": [
+        "src/**/*",
+        "tests/**/*"
+      ],
+      "exclude": [
+        "node_modules",
+        "build",
+        "dist",
+      ]
+}

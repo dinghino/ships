@@ -1,0 +1,14 @@
+{
+  "name": "ts-ship-game",
+  "version": "0.0.1",
+  "description": "A Ship game in typescript",
+  "main": "./dist/index.js",
+  "repository": "https://github.com/dinghino/ships.git",
+  "author": "Daniele Ding <dinghino@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^9.4.6",
+    "ts-node": "^5.0.0",
+    "typescript": "^2.7.2"
+  }
+}
