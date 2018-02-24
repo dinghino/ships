@@ -90,4 +90,4 @@ The actual actors involved are
 * **PartsFactory** (found in `src/ships/parts/factories`) objects, on the other hand, are the actual factories that build the parts (engines, weapons etc) and are specialized on a single type of part.
   Each entity part also keep track of what it is and where it was produced and _bought_ from, because why not.
 
-* **Entities** Finally, the entities are all the main actors that can do actions, so Ships, Aircrafts, People and so on.... They get
+* **Entities** Finally, the entities are all the main actors that can do actions, so Ships, Aircrafts... There is a little bit of logic but they do little more than nothing except existing and containing other stuff.
