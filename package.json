@@ -10,5 +10,9 @@
     "@types/node": "^9.4.6",
     "ts-node": "^5.0.0",
     "typescript": "^2.7.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "yarn build && node ./dist"
   }
 }
