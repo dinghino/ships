@@ -19,8 +19,6 @@ export abstract class Aircraft extends Vehicle {
 
   readonly type: 'aircraft' = 'aircraft'
 
-  protected target: Entity
-
   constructor( name: string, vendor: PartsProvider, options?: AircraftOptions) {
     super(name, vendor, options)
   }
@@ -43,18 +41,6 @@ export abstract class Aircraft extends Vehicle {
       }
     }
   }
-  setTarget(target: Entity): Entity {
-    this.target = target
-    console.log(`[ . ] The '${this.name}' is targetting '${target.name}'.`)
-    return this.target
-  }
-  chooseTarget(targets: Entity[]): Entity {
-    // remove current ship if present in the options
-    targets = targets.filter(target => target !== this)
-    const target = targets[Math.floor(Math.random() * targets.length)]
-    return this.setTarget(target)
-  }
-  hasTarget() { return !!this.target }
 
   get info(): AircraftInfo {
     return {

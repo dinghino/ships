@@ -19,26 +19,10 @@ export abstract class Ship extends Vehicle {
   type: 'ship' = 'ship'
   abstract __type: ShipType
 
-  protected target: Entity
+  // protected target: Entity
 
   constructor(name: string, vendor: PartsProvider, options: ShipOptions) {
     super(name, vendor, options)
-  }
-
-  hasTarget() { return !!this.target }
-
-  setTarget(target: Entity): Entity {
-    this.target = target
-    if (this.target === null) return
-    console.log(`[ x ] The '${this.name}' is targetting '${target.name}'.`)
-    return target
-  }
-
-  chooseTarget(targets: Entity[]): Entity {
-    // remove current ship if present in the options
-    targets = targets.filter(target => target !== this)
-    const target = targets[Math.floor(Math.random() * targets.length)]
-    return this.setTarget(target)
   }
 
   attack(target?: Entity) {

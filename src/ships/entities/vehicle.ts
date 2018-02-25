@@ -3,7 +3,7 @@ import Entity from './entity'
 import { Engine, EngineType, EngineInfo } from '../parts/engines'
 import { Weapon, WeaponType, WeaponInfo } from '../parts/weapons'
 import { FuelTank, TanksType, FuelTankInfo, FuelTankOptions } from '../parts/fuelTanks'
-
+import { Targeting } from '../systems'
 
 import { PartJSON } from '../parts/parts'
 
@@ -40,6 +40,10 @@ export abstract class Vehicle extends Entity {
   constructor(name: string, vendor: PartsProvider, options: VehicleOptions) {
     super(name)
 
+    // Vehicle can by default handle targets
+    this.targeting = Targeting.getInstance(this, Targeting.TYPE.ACTIVE)
+
+    // parts assembly
     this.engine = vendor.getEngine(options.engine)
     this.weapon = vendor.getWeapon(options.weapon)
     this.fuelTank = vendor.getFuelTank(options.fuelTank, options.tankOptions)
@@ -49,11 +53,11 @@ export abstract class Vehicle extends Entity {
     return this.hullMass + this.fuelTank.mass
   }
 
-  get topSpeed() {
+  get topSpeed(): number {
     return parseFloat((this.engine.power / this.mass).toFixed(2))
   }
 
-  hasUsableWeapons() { return this.weapon && this.weapon.usable }
+  hasUsableWeapons(): boolean { return this.weapon && this.weapon.usable }
 
   /**
    * Get an object describing the full Vehicle systems and current state
