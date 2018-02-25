@@ -28,13 +28,19 @@ export abstract class Part {
     private __vendor: string,
   ) {}
 
-  toJSON(): { [K:string]: any } {
+  toJSON(): PartJSON {
     return {
       type: this.__type,
       manufacturer: this.__manufacturer,
       vendor: this.__vendor,
     }
   }
+}
+
+export interface PartJSON {
+  type: string
+  manufacturer: string
+  vendor: string
 }
 
 export interface PartsConstructor<PT extends Part> {
