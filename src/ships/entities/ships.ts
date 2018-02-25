@@ -8,7 +8,6 @@ export interface ShipOptions extends VehicleOptions {
 }
 
 export interface ShipInfo extends VehicleInfo {
-  mass: number
   topSpeed: number
   target: string | false
 }
@@ -22,12 +21,8 @@ export abstract class Ship extends Vehicle {
 
   protected target: Entity
 
-  abstract mass: number
-
-  constructor(name: string, private vendor: PartsProvider, options: ShipOptions) {
-    super(name)
-    this.engine = vendor.getEngine(options.engine)
-    this.weapon = vendor.getWeapon(options.weapon)
+  constructor(name: string, vendor: PartsProvider, options: ShipOptions) {
+    super(name, vendor, options)
   }
 
   hasTarget() { return !!this.target }
@@ -62,7 +57,7 @@ export abstract class Ship extends Vehicle {
   }
 
   move(direction?: string) {
-    const speed = `at ${this.speed} mph.`
+    const speed = `at ${this.topSpeed} mph.`
     if (direction)
       console.log(`[ > ] The '${this.name}' is moving ${direction} ${speed}`)
     else if (this.target)
@@ -71,14 +66,10 @@ export abstract class Ship extends Vehicle {
       console.log(`[ ? ] The '${this.name}' is moving in a search pattern at ${speed}`)
   }
 
-  get speed() {
-    return parseFloat((this.engine.power / this.mass).toFixed(2))
-  }
   get info(): ShipInfo {
     return {
       ...super.info,
-      mass: this.mass,
-      topSpeed: this.speed,
+      topSpeed: this.topSpeed,
       target: this.target && this.target.name,
     }
   }
@@ -94,27 +85,27 @@ export default Ship
 
 export class Corvette extends Ship {
   __type = ShipType.CORVETTE
-  mass = 10
+  hullMass = 10
 }
 
 export class Destroyer extends Ship {
   __type = ShipType.DESTROYER
-  mass = 17
+  hullMass = 17
 }
 
 export class Cruiser extends Ship {
   __type = ShipType.CRUISER
-  mass = 25
+  hullMass = 25
 }
 
 export class Battleship extends Ship {
   __type = ShipType.BATTLESHIP
-  mass = 40
+  hullMass = 40
 }
 
 export class FishingShip extends Ship {
   __type = ShipType.FISHING;
-  mass = 1
+  hullMass = 1
 }
 
 

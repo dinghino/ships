@@ -14,21 +14,15 @@ export interface AircraftInfo extends VehicleInfo {
   target: string | false
 }
 
-export abstract class Aircraft extends Vehicle { // implements Entity {
+export abstract class Aircraft extends Vehicle {
   abstract __type: AircraftType
 
   readonly type: 'aircraft' = 'aircraft'
 
   protected target: Entity
 
-  constructor(
-    name: string,
-    vendor: PartsProvider,
-    options?: AircraftOptions
-  ) {
-    super(name)
-    this.engine = vendor.getEngine(options.engine)
-    this.weapon = vendor.getWeapon(options.weapon)
+  constructor( name: string, vendor: PartsProvider, options?: AircraftOptions) {
+    super(name, vendor, options)
   }
 
   move(direction?: string): void {
@@ -79,10 +73,12 @@ export abstract class Aircraft extends Vehicle { // implements Entity {
 
 export class Bomber extends Aircraft {
   __type = AircraftType.BOMBER
+  hullMass = 3
 }
 
 export class Fighter extends Aircraft {
   __type = AircraftType.FIGHTER
+  hullMass = 1
 }
 
 export const Aircrafts = {
