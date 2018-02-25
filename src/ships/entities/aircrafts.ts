@@ -2,6 +2,8 @@ import Entity from './entity'
 import Vehicle, { VehicleOptions, VehicleConstructor, VehicleInfo } from './vehicle'
 import { PartsProvider } from '../parts/vendors'
 
+import { PartJSON } from '../parts/parts'
+
 export interface AircraftOptions extends VehicleOptions{
 }
 

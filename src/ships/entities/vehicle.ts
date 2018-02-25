@@ -3,6 +3,8 @@ import Entity from './entity'
 import { Engine, EngineType, EngineInfo } from '../parts/engines'
 import { Weapon, WeaponType, WeaponInfo } from '../parts/weapons'
 
+import { PartJSON } from '../parts/parts'
+
 export interface VehicleOptions {
   engine: EngineType
   weapon: WeaponType
