@@ -1,43 +1,31 @@
 import Entity from './entity'
-import { Engine, EngineType, EngineInfo } from '../parts/engines'
-import { Weapon, WeaponType, WeaponInfo } from '../parts/weapons'
+import Vehicle, { VehicleOptions, VehicleConstructor, VehicleInfo } from './vehicle'
 import { PartsProvider } from '../parts/vendors'
 
-export interface ShipOptions {
-  engine: EngineType
-  weapon: WeaponType
+export interface ShipOptions extends VehicleOptions {
 }
 
-export interface ShipInfo {
-  class: string
-  name: string
+export interface ShipInfo extends VehicleInfo {
   mass: number
   topSpeed: number
-
   target: string | false
-
-  engine: EngineInfo
-  weapon: WeaponInfo
 }
 
-export interface ShipConstructor {
-  new (name: string, factory: PartsProvider, options?: ShipOptions): Ship
+export interface ShipConstructor extends VehicleConstructor<Ship, ShipOptions> {
 }
 
-export abstract class Ship extends Entity {
+export abstract class Ship extends Vehicle {
   type: 'ship' = 'ship'
   abstract __type: ShipType
-  protected engine: Engine
-  protected weapon: Weapon
 
   protected target: Entity
 
   abstract mass: number
 
-  constructor(public name: string, private partsFactory: PartsProvider, options: ShipOptions) {
-    super()
-    this.engine = partsFactory.getEngine(options.engine)
-    this.weapon = partsFactory.getWeapon(options.weapon)
+  constructor(name: string, private vendor: PartsProvider, options: ShipOptions) {
+    super(name)
+    this.engine = vendor.getEngine(options.engine)
+    this.weapon = vendor.getWeapon(options.weapon)
   }
 
   hasUsableWeapons() { return this.weapon.usable }
@@ -86,28 +74,18 @@ export abstract class Ship extends Entity {
   get speed() {
     return parseFloat((this.engine.power / this.mass).toFixed(2))
   }
-  /**
-   * Get an object describing the full Ship system and current state
-   */
   get info(): ShipInfo {
     return {
       ...super.info,
       mass: this.mass,
       topSpeed: this.speed,
       target: this.target && this.target.name,
-      engine: this.engine.info,
-      weapon: this.weapon.info,
     }
   }
-  /**
-   * Serialize the minimum information required to rebuild the object.
-   */
   toJSON() {
     return {
       ...super.toJSON(),
       target: this.target && this.target._id,
-      engine: this.engine.toJSON(),
-      weapon: this.weapon.toJSON(),
     }
   }
 }

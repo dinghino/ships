@@ -11,12 +11,12 @@ export abstract class Entity {
   abstract readonly type: string;
   static EntitiesCount: number = 0
 
+  abstract __entityType: string
   abstract __type: string // Type of entity
-  abstract readonly name: string
 
   readonly _id: number
 
-  constructor() {
+  constructor(readonly name: string) {
     this._id = Entity.EntitiesCount++
   }
 
@@ -38,6 +38,9 @@ export abstract class Entity {
       name: this.name,
     }
   }
+  /**
+   * Serialize the minimum information required to rebuild the object.
+   */
   toJSON() {
     return {
       type: this.__type,
