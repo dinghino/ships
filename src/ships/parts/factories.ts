@@ -1,6 +1,6 @@
 import { Engine, EngineType, Engines } from './engines'
 import { Weapon, WeaponType, Weapons } from './weapons'
-import { FuelTank, TanksType, FuelTanks } from './fuelTanks'
+import { FuelTank, TanksType, FuelTanks, FuelTankOptions } from './fuelTanks'
 
 import { Part, PartsConstructor } from './parts'
 
@@ -15,7 +15,7 @@ export abstract class PartsFactory<T extends Part> {
   ) {
   }
 
-  create(type: string, vendor: string, ...options: any[]): T {
+  create(type: string, vendor: string, options: any): T {
     try {
       return new (this.classes[type])(
         this.__factoryName,

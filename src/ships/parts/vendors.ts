@@ -1,6 +1,6 @@
 import { Engine, EngineType } from './engines'
 import { Weapon, WeaponType } from './weapons'
-import { FuelTank, TanksType } from './fuelTanks'
+import { FuelTank, TanksType, FuelTankOptions } from './fuelTanks'
 
 import {
   EnginesFactory,
@@ -19,9 +19,9 @@ export interface PartsProvider {
 
   readonly availableEngines: string[]
   readonly availableWeapons: string[]
-  getEngine(type?: string): Engine
-  getWeapon(type?: string): Weapon
-  getFuelTank(type?: string): FuelTank
+  getEngine(type?: string, options?: any): Engine
+  getWeapon(type?: string, options?: any): Weapon
+  getFuelTank(type?: string, options?: FuelTankOptions): FuelTank
   
 }
 
@@ -57,20 +57,20 @@ export class PartsVendor implements PartsProvider {
     return this.fuelTankFactory.availableParts
   }
 
-  getEngine(type?: EngineType) {
+  getEngine(type?: EngineType, options?: any) {
     if (!type)
       type = utils.randomType(EngineType)
-    return this.enginesFactory.create(type, this.__vendorName)
+    return this.enginesFactory.create(type, this.__vendorName, options)
   }
-  getWeapon(type?: WeaponType) {
+  getWeapon(type?: WeaponType, options?: any) {
     if (!type)
       type = utils.randomType(WeaponType)
-    return this.weaponsFactory.create(type, this.__vendorName)
+    return this.weaponsFactory.create(type, this.__vendorName, options)
   }
-  getFuelTank(type?: TanksType) {
+  getFuelTank(type?: TanksType, options?: FuelTankOptions) {
     if (!type)
       type = utils.randomType(TanksType)
-    return this.fuelTankFactory.create(type, this.__vendorName)
+    return this.fuelTankFactory.create(type, this.__vendorName, options)
   }
 }
 
