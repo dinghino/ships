@@ -15,6 +15,7 @@ import {
   Battleship,
 } from '../entities/ships'
 
+import { Targeting } from '../systems'
 /**
  * A Shipyard is capable of producing various types of ships
  */
@@ -66,14 +67,16 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
    * @param options Ship options object
    */
   buildFishingShip(name: string, options?: Partial<ShipOptions>): FishingShip {
-    return this._build(
+    const ship = this._build(
       name,
       FishingShip,
       this.normalizeOpts({
         tankOptions: { capacity: 750 },
       }, options),
-      
     )
+    // Fishing ships are civilians, so we don't want it to be able to target stuff
+    ship.setTargetingSystem(Targeting.getInstance(ship, Targeting.TYPE.NULL))
+    return ship
   }
   /**
    * Create a Corvette class military ship.
