@@ -1,26 +1,34 @@
 import { Part } from './parts'
 
+export interface FuelTankInfo {
+  capacity: number
+  current: number
+  mass: number
+}
+
+export interface FuelTankOptions {
+  capacity: number
+}
+
 /**
  * A Fuel tank contains and provide fuel.
  * A new FuelTank is always full.
  */
 export class FuelTank extends Part {
-  __type: TanksType.FUEL_TANK
+  __type: TanksType = TanksType.FUEL_TANK
 
   private fuel: FuelState
+  public capacity: number
 
-  constructor(
-    /** who built the fuel tank */
-    manufacturer: string,
-    /** who sold the fuel tank */
-    vendor: string,
-    /** fuel tank maximum capacity */
-    public capacity: number
-  ) {
+  constructor(manufacturer: string, vendor: string, options?: FuelTankOptions) {
     super(manufacturer, vendor)
+    // fallback size in case the factory forgot to decide.
+    this.capacity = options && options.capacity || 1000
     this.fuel = FuelState.getFull(this)
   }
-
+  get mass(): number {
+    return 1 + parseFloat(this.fuel.mass.toFixed(3))
+  }
   /** Current fuel quantity in the tank */
   get currentFuel(): number { return this.fuel.quantity }
 
@@ -47,23 +55,30 @@ export class FuelTank extends Part {
 
   changeState(state: FuelState) { this.fuel = state }
 
-  get info() {
+  get info(): FuelTankInfo {
     return {
       capacity: this.capacity,
-      currentFuel: this.currentFuel
+      current: this.currentFuel,
+      mass: this.mass
     }
   }
   toJSON() {
     return {
-      ...super.toJSON()
+      ...super.toJSON(),
+      capacity: this.capacity,
+      currentFuel: this.currentFuel,
     }
   }
 }
+
+export default FuelTank
 
 /**
  * Abstract FuelState class
  */
 export abstract class FuelState {
+  protected _unitMass = 0.0035
+
   protected constructor(
     /** FuelTank object that contains this fuel */
     protected tank: FuelTank,
@@ -84,6 +99,10 @@ export abstract class FuelState {
    *         added quantity is higher than the max fuel capacity.
    */
   abstract add(amount: number): number
+
+  get mass(): number {
+    return this.quantity * this._unitMass
+  }
 
   static getFull(tank: FuelTank, quantity = tank.capacity) {
     return new FullTank(tank, quantity)
@@ -142,6 +161,7 @@ export class EmptyTank extends FuelState {
  * returns the requested fuel
  */
 export class InfiniteTank extends FuelState {
+  protected _unitMass = 0 // since the fuel can be infinite, it has no mass
   remove(amount: number): number {
     return amount
   }
