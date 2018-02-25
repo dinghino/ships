@@ -30,6 +30,8 @@ export abstract class Vehicle extends Entity {
   refuel(amount: number): number {
     return this.fuelTank.refuel(amount)
   }
+  hasUsableWeapons() { return this.weapon && this.weapon.usable }
+
   /**
    * Get an object describing the full Vehicle systems and current state
    */

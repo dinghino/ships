@@ -34,18 +34,18 @@ export abstract class Aircraft extends Vehicle { // implements Entity {
   }
   attack(target?: Entity): void {
     if (target)
-    this.setTarget(target)
+      this.setTarget(target)
 
-  if (this.target) {
-    if (this.weapon.usable) {
-      console.log(`[ . ] ${this.name} engages ${target.name} from above.`)
-      this.weapon.fire(this, this.target)
-   } else {
-      console.log(`[ i ] The '${this.name}' does not have usable weapons and goes somewhere else.`)
-      this.setTarget(null)
-      this.move()
+    if (this.target) {
+      if (this.hasUsableWeapons()) {
+        console.log(`[ . ] ${this.name} engages ${target.name} from above.`)
+        this.weapon.fire(this, this.target)
+    } else {
+        console.log(`[ i ] The '${this.name}' does not have usable weapons and goes somewhere else.`)
+        this.setTarget(null)
+        this.move()
+      }
     }
-  }
   }
   setTarget(target: Entity): Entity {
     this.target = target

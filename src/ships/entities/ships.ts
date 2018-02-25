@@ -28,8 +28,6 @@ export abstract class Ship extends Vehicle {
     this.weapon = vendor.getWeapon(options.weapon)
   }
 
-  hasUsableWeapons() { return this.weapon.usable }
-
   hasTarget() { return !!this.target }
 
   setTarget(target: Entity): Entity {
