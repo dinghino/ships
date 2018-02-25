@@ -1,10 +1,14 @@
 import { Engine, EngineType } from './engines'
 import { Weapon, WeaponType } from './weapons'
+import { FuelTank, TanksType } from './fuelTanks'
+
 import {
   EnginesFactory,
-  WeaponsFactory
+  WeaponsFactory,
+  FuelTankFactory,
 } from './factories'
 import * as utils from '../utils'
+
 /**
  * A PartsProvider is a broker that provides various parts for ships, like a shop.
  * A client (ship) can require a specific part from one of the available ones
@@ -17,6 +21,7 @@ export interface PartsProvider {
   readonly availableWeapons: string[]
   getEngine(type?: string): Engine
   getWeapon(type?: string): Weapon
+  getFuelTank(type?: string): FuelTank
   
 }
 
@@ -28,11 +33,13 @@ export interface PartsProvider {
  * that, as weapons, only provide missiles of various types...
  */
 export class PartsVendor implements PartsProvider {
+
   __vendorName = Vendors.GENERAL_STORE
   static __instance: PartsVendor
   protected constructor(
     protected enginesFactory = EnginesFactory.getInstance(),
     protected weaponsFactory = WeaponsFactory.getInstance(),
+    protected fuelTankFactory = FuelTankFactory.getInstance(),
   ) {}
 
   static getInstance(): PartsVendor {
@@ -46,6 +53,9 @@ export class PartsVendor implements PartsProvider {
   get availableWeapons() {
     return this.weaponsFactory.availableParts
   }
+  get availableFuelTanks() {
+    return this.fuelTankFactory.availableParts
+  }
 
   getEngine(type?: EngineType) {
     if (!type)
@@ -56,6 +66,11 @@ export class PartsVendor implements PartsProvider {
     if (!type)
       type = utils.randomType(WeaponType)
     return this.weaponsFactory.create(type, this.__vendorName)
+  }
+  getFuelTank(type?: TanksType) {
+    if (!type)
+      type = utils.randomType(TanksType)
+    return this.fuelTankFactory.create(type, this.__vendorName)
   }
 }
 
