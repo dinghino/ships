@@ -1,34 +1,30 @@
 import Entity from './entity'
-
-import { Engine, EngineType } from '../parts/engines'
-import { Weapon, WeaponType } from '../parts/weapons'
+import Vehicle, { VehicleOptions, VehicleConstructor, VehicleInfo } from './vehicle'
 import { PartsProvider } from '../parts/vendors'
 
-export interface AircraftOptions {
-  engine: EngineType
-  weapon: WeaponType
+export interface AircraftOptions extends VehicleOptions{
 }
 
-export interface AircraftConstructor {
-  new (name: string, factory: PartsProvider, options?: AircraftOptions): Aircraft
+export interface AircraftConstructor extends VehicleConstructor<Aircraft, AircraftOptions> {
 }
 
-export abstract class Aircraft extends Entity { // implements Entity {
+export interface AircraftInfo extends VehicleInfo {
+  target: string | false
+}
+
+export abstract class Aircraft extends Vehicle { // implements Entity {
   abstract __type: AircraftType
 
   readonly type: 'aircraft' = 'aircraft'
 
-  protected engine: Engine
-  protected weapon: Weapon
-
   protected target: Entity
 
   constructor(
-    public name: string,
+    name: string,
     vendor: PartsProvider,
     options?: AircraftOptions
   ) {
-    super()
+    super(name)
     this.engine = vendor.getEngine(options.engine)
     this.weapon = vendor.getWeapon(options.weapon)
   }
@@ -38,18 +34,18 @@ export abstract class Aircraft extends Entity { // implements Entity {
   }
   attack(target?: Entity): void {
     if (target)
-    this.setTarget(target)
+      this.setTarget(target)
 
-  if (this.target) {
-    if (this.weapon.usable) {
-      console.log(`[ . ] ${this.name} engages ${target.name} from above.`)
-      this.weapon.fire(this, this.target)
-   } else {
-      console.log(`[ i ] The '${this.name}' does not have usable weapons and goes somewhere else.`)
-      this.setTarget(null)
-      this.move()
+    if (this.target) {
+      if (this.hasUsableWeapons()) {
+        console.log(`[ . ] ${this.name} engages ${target.name} from above.`)
+        this.weapon.fire(this, this.target)
+    } else {
+        console.log(`[ i ] The '${this.name}' does not have usable weapons and goes somewhere else.`)
+        this.setTarget(null)
+        this.move()
+      }
     }
-  }
   }
   setTarget(target: Entity): Entity {
     this.target = target
@@ -63,6 +59,20 @@ export abstract class Aircraft extends Entity { // implements Entity {
     return this.setTarget(target)
   }
   hasTarget() { return !!this.target }
+
+  get info(): AircraftInfo {
+    return {
+      ...super.info,
+      target: this.target && this.target.name,
+    }
+  }
+
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      target: this.target && this.target._id,
+    }
+  }
 }
 
 export class Bomber extends Aircraft {
