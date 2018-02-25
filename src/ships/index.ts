@@ -7,12 +7,15 @@ import { AircraftType, AircraftOptions } from './entities/aircrafts'
 
 import { WeaponType, EngineType, Engine, Weapon } from './parts'
 
+import * as System from './systems'
+
 export {
   Entity,
   Ship, ShipType, ShipOptions,
   Aircraft, AircraftType, AircraftOptions,
   Engine, WeaponType,
   Weapon, EngineType,
+  System
 }
 
 export default Game
