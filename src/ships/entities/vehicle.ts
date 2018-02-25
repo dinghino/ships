@@ -2,12 +2,10 @@ import { PartsProvider } from '../parts'
 import Entity from './entity'
 import { Engine, EngineType, EngineInfo } from '../parts/engines'
 import { Weapon, WeaponType, WeaponInfo } from '../parts/weapons'
-import { FuelTank, FuelTankType } from '../parts/fuelTanks'
 
 export interface VehicleOptions {
   engine: EngineType
   weapon: WeaponType
-  fuelTank?: FuelTankType
 }
 
 export interface VehicleInfo {
@@ -25,11 +23,7 @@ export abstract class Vehicle extends Entity {
   __entityType: 'VEHICLE' = 'VEHICLE'
   protected engine: Engine
   protected weapon: Weapon
-  protected fuelTank: FuelTank
 
-  refuel(amount: number): number {
-    return this.fuelTank.refuel(amount)
-  }
   hasUsableWeapons() { return this.weapon && this.weapon.usable }
 
   /**
