@@ -1,9 +1,5 @@
 import GameEntityFactory from './factory'
-
-import * as Vendors from '../parts/vendors'
-import { WeaponType } from '../parts/weapons'
-import { EngineType } from '../parts/engines'
-
+import { PartsVendor, TanksType, WeaponType, EngineType } from '../parts'
 import * as utils from '../utils'
 import {
   ShipOptions,
@@ -19,13 +15,19 @@ import {
   Battleship,
 } from '../entities/ships'
 
-
 /**
  * A Shipyard is capable of producing various types of ships
  */
 
 export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> {
   readonly availableShips = ShipType
+
+  static defaultOptions: ShipOptions = {
+    engine: EngineType.SAILS,
+    weapon: WeaponType.UNARMED,
+    fuelTank: TanksType.FUEL_TANK,
+    tankOptions: { capacity: 100000 },
+  }
 
   build(name: string, type?: ShipType, options?: Partial<ShipOptions>): Ship {
     if (!type) type = utils.randomType(ShipType)
@@ -47,6 +49,18 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
   }
 
   /**
+   * Actual factory method that creates the ships using all the options and stuff
+   * injected on previous calls.
+   */
+  private _build(name: string, Cls: ShipConstructor, options?: Partial<ShipOptions>): Ship {
+    return new Cls(
+      name,                           // _name field
+      PartsVendor.getInstance(),    // ship's parts provider
+      this.normalizeOpts(options),    // ship construction options
+    )
+  }
+
+  /**
    * Create a fishing boat. by default it's slow and unarmed
    * @param name Name of the ship
    * @param options Ship options object
@@ -55,7 +69,10 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
     return this._build(
       name,
       FishingShip,
-      this.normalizeOpts({}, options),
+      this.normalizeOpts({
+        tankOptions: { capacity: 750 },
+      }, options),
+      
     )
   }
   /**
@@ -70,6 +87,7 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
       this.normalizeOpts({
         engine: EngineType.STEAM,
         weapon: WeaponType.TORPEDO,
+        tankOptions: { capacity: 5000 },
       }, options),
     )
   }
@@ -85,6 +103,7 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
       this.normalizeOpts({
         engine: EngineType.DIESEL,
         weapon: WeaponType.TORPEDO,
+        tankOptions: { capacity: 10000 },
       }, options),
     )
   }
@@ -100,6 +119,7 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
       this.normalizeOpts({
         engine: EngineType.STEAM,
         weapon: WeaponType.CANNON,
+        tankOptions: { capacity: 50000 },
       }, options),
     )
   }
@@ -115,19 +135,8 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
       this.normalizeOpts({
         engine: EngineType.NUCLEAR,
         weapon: WeaponType.MISSILE,
+        tankOptions: { capacity: 100000 },
       }, options),
-    )
-  }
-
-  /**
-   * Actual factory method that creates the ships using all the options and stuff
-   * injected on previous calls.
-   */
-  private _build(name: string, Cls: ShipConstructor, options?: Partial<ShipOptions>): Ship {
-    return new Cls(
-      name,                           // _name field
-      Vendors.PartsVendor.getInstance(),    // ship's parts provider
-      this.normalizeOpts(options),    // ship construction options
     )
   }
 
@@ -139,8 +148,7 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
    */
   private normalizeOpts(defaults: Partial<ShipOptions>, extra: Partial<ShipOptions> = {}): ShipOptions {
     return {
-      engine: EngineType.SAILS,
-      weapon: WeaponType.UNARMED,
+      ...Shipyard.defaultOptions,
       ...defaults,
       ...extra
     }

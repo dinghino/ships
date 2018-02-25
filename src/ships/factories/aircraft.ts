@@ -1,7 +1,5 @@
 import GameEntityFactory from './factory'
-import * as Vendors from '../parts/vendors'
-import { EngineType } from '../parts/engines'
-import { WeaponType } from '../parts';
+import { PartsVendor, TanksType, WeaponType, EngineType } from '../parts'
 
 import {
   Aircraft,
@@ -17,10 +15,10 @@ export class AircraftFactory implements GameEntityFactory<Aircraft, AircraftOpti
   
   static defaultOptions: AircraftOptions = {
     engine: EngineType.DIESEL,
-    weapon: WeaponType.MISSILE
+    weapon: WeaponType.MISSILE,
+    fuelTank: TanksType.FUEL_TANK,
+    tankOptions: { capacity: 200 },
   }
-
-  createdAircrafts = 0
   /**
    * Build a new Ship of the required class, optionally overriding the defaults
    * ship parts in it.
@@ -42,7 +40,7 @@ export class AircraftFactory implements GameEntityFactory<Aircraft, AircraftOpti
     }
     return new Cls(
       name,
-      Vendors.PartsVendor.getInstance(),
+      PartsVendor.getInstance(),
       {...AircraftFactory.defaultOptions, ...options},
     )
   }
