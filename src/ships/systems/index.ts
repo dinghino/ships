@@ -1,2 +1,6 @@
 import { Targeting, TargetingBehaviours } from './targeting'
-export { Targeting, TargetingBehaviours }
+import { MovingStrategy, MovingBehaviours } from './moving'
+export {
+  Targeting, TargetingBehaviours,
+  MovingStrategy, MovingBehaviours,
+}
