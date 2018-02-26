@@ -16,7 +16,15 @@ export interface AircraftInfo extends VehicleInfo {
   target: string | false
 }
 
+export enum AircraftType {
+  BOMBER = 'BOMBER',
+  FIGHTER = 'FIGHTER',
+}
+
 export abstract class Aircraft extends Vehicle {
+
+  static TYPE = AircraftType
+
   abstract __type: AircraftType
 
   readonly type: 'aircraft' = 'aircraft'
@@ -26,18 +34,20 @@ export abstract class Aircraft extends Vehicle {
     this.moveStrategy = MovingStrategy.getInstance(this, MovingStrategy.TYPE.FLY)
   }
 
-  attack(target?: Entity): void {
+  attack(target?: Entity): boolean {
     if (target)
       this.setTarget(target)
 
     if (this.target) {
       if (this.hasUsableWeapons()) {
-        console.log(`[ . ] ${this.name} engages ${target.name} from above.`)
+        console.log(`[ . ] ${this.name} engages ${this.target.name} from above.`)
         this.weapon.fire(this, this.target)
+        return true
     } else {
         console.log(`[ i ] The '${this.name}' does not have usable weapons and goes somewhere else.`)
         this.setTarget(null)
         this.move()
+        return false
       }
     }
   }
@@ -70,11 +80,6 @@ export class Fighter extends Aircraft {
 export const Aircrafts = {
   Bomber,
   Fighter,
-}
-
-export enum AircraftType {
-  BOMBER = 'BOMBER',
-  FIGHTER = 'FIGHTER',
 }
 
 export default Aircraft

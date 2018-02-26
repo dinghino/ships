@@ -18,7 +18,18 @@ export interface ShipInfo extends VehicleInfo {
 export interface ShipConstructor extends VehicleConstructor<Ship, ShipOptions> {
 }
 
+export enum ShipType {
+  CORVETTE = 'CORVETTE',
+  DESTROYER = 'DESTROYER',
+  CRUISER = 'CRUISER',
+  BATTLESHIP = 'BATTLESHIP',
+  FISHING = 'FISHING SHIP',
+}
+
 export abstract class Ship extends Vehicle {
+
+  static TYPE = ShipType
+
   type: 'ship' = 'ship'
   abstract __type: ShipType
 
@@ -91,11 +102,4 @@ export const Ships = {
   Cruiser,
   Battleship,
   FishingShip,
-}
-export enum ShipType {
-  CORVETTE = 'CORVETTE',
-  DESTROYER = 'DESTROYER',
-  CRUISER = 'CRUISER',
-  BATTLESHIP = 'BATTLESHIP',
-  FISHING = 'FISHING SHIP',
 }

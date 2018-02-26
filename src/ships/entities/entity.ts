@@ -59,7 +59,7 @@ export abstract class Entity {
 
   canSelectTargets(): boolean { return this.targeting.isWorking() }
 
-  protected get target(): Entity { return this.targeting.target }
+  get target(): Entity { return this.targeting.target }
 
   hasTarget(): boolean {
     return this.targeting.hasTarget()
