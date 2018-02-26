@@ -2,6 +2,8 @@ import Entity from './entity'
 import Vehicle, { VehicleOptions, VehicleConstructor, VehicleInfo } from './vehicle'
 import { PartsProvider } from '../parts/vendors'
 
+import { MovingStrategy } from '../systems'
+
 import { PartJSON } from '../parts/parts'
 
 export interface AircraftOptions extends VehicleOptions{
@@ -21,11 +23,9 @@ export abstract class Aircraft extends Vehicle {
 
   constructor( name: string, vendor: PartsProvider, options?: AircraftOptions) {
     super(name, vendor, options)
+    this.moveStrategy = MovingStrategy.getInstance(this, MovingStrategy.TYPE.FLY)
   }
 
-  move(direction?: string): void {
-    console.log(`[ ~ ] ${this.name} flies around`)
-  }
   attack(target?: Entity): void {
     if (target)
       this.setTarget(target)

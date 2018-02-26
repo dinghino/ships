@@ -2,6 +2,9 @@ import Entity from './entity'
 import Vehicle, { VehicleOptions, VehicleConstructor, VehicleInfo } from './vehicle'
 import { PartsProvider } from '../parts/vendors'
 
+import { MovingStrategy } from '../systems'
+
+
 import { PartJSON } from '../parts/parts'
 
 export interface ShipOptions extends VehicleOptions {
@@ -19,10 +22,9 @@ export abstract class Ship extends Vehicle {
   type: 'ship' = 'ship'
   abstract __type: ShipType
 
-  // protected target: Entity
-
   constructor(name: string, vendor: PartsProvider, options: ShipOptions) {
     super(name, vendor, options)
+    this.moveStrategy = MovingStrategy.getInstance(this, MovingStrategy.TYPE.SAIL)
   }
 
   attack(target?: Entity) {
@@ -38,16 +40,6 @@ export abstract class Ship extends Vehicle {
         this.move()
       }
     }
-  }
-
-  move(direction?: string) {
-    const speed = `at ${this.topSpeed} mph.`
-    if (direction)
-      console.log(`[ > ] The '${this.name}' is moving ${direction} ${speed}`)
-    else if (this.target)
-      console.log(`[ ! ] The '${this.name}' is moving toward the '${this.target.name}' at ${speed}`)
-    else
-      console.log(`[ ? ] The '${this.name}' is moving in a search pattern at ${speed}`)
   }
 
   get info(): ShipInfo {

@@ -1,6 +1,6 @@
 import { PartsProvider } from '../parts'
 
-import { Targeting, TargetingBehaviours } from '../systems'
+import { Targeting, TargetingBehaviours, MovingStrategy, MovingBehaviours } from '../systems'
 
 export interface ConcreteEntityConstructor {
   new (name: string, vendor: PartsProvider, options: { [K:string]: any }): Entity
@@ -15,12 +15,19 @@ export abstract class Entity {
   abstract readonly type: string
   abstract __entityType: string
   abstract __type: string // Type of entity
+
+  // how fast can the entity move
+  abstract readonly topSpeed: number
+
   readonly _id: number
 
   protected targeting: Targeting
+  protected moveStrategy: MovingStrategy
 
   constructor(readonly name: string) {
     this._id = Entity.EntitiesCount++
+    // Fallback for all entities is to not be able to move.
+    this.moveStrategy = MovingStrategy.getInstance(this, MovingStrategy.TYPE.STATIC)
   }
 
   get cls() { // TODO: Make something better for the entity `class`.
@@ -29,8 +36,11 @@ export abstract class Entity {
 
   // Actions -----------------------------------------------------------------
 
-  abstract move(direction?: string): void
   abstract attack(target?: Entity): void
+
+  move(direction?: string): void {
+    return this.moveStrategy.move(direction)
+  }
 
   // Targeting ---------------------------------------------------------------
 
