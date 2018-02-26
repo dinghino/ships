@@ -1,10 +1,21 @@
 import Part from './parts'
 import Entity from '../entities'
 
+
+export enum WeaponType {
+  UNARMED = 'UNARMED',
+  MISSILE = 'MISSILE',
+  TORPEDO = 'TORPEDO',
+  CANNON = 'CANNON',
+}
+
 /**
  * Base class for all the Entity weapon systems
  */
 export abstract class Weapon extends Part {
+
+  static TYPE = WeaponType
+
   abstract __type: WeaponType
   protected _usable = true
 
@@ -88,11 +99,4 @@ export const Weapons = {
   Cannon,
   Torpedo,
   Missile,
-}
-
-export enum WeaponType {
-  UNARMED = 'UNARMED',
-  MISSILE = 'MISSILE',
-  TORPEDO = 'TORPEDO',
-  CANNON = 'CANNON',
 }

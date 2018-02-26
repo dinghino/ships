@@ -1,5 +1,5 @@
 import GameEntityFactory from './factory'
-import { PartsVendor, TanksType, WeaponType, EngineType } from '../parts'
+import { PartsVendor, FuelTank, Weapon, Engine } from '../parts'
 import * as utils from '../utils'
 import {
   ShipOptions,
@@ -15,6 +15,7 @@ import {
   Battleship,
 } from '../entities/ships'
 
+import { Targeting } from '../systems'
 /**
  * A Shipyard is capable of producing various types of ships
  */
@@ -23,9 +24,9 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
   readonly availableShips = ShipType
 
   static defaultOptions: ShipOptions = {
-    engine: EngineType.SAILS,
-    weapon: WeaponType.UNARMED,
-    fuelTank: TanksType.FUEL_TANK,
+    engine: Engine.TYPE.SAILS,
+    weapon: Weapon.TYPE.UNARMED,
+    fuelTank: FuelTank.TYPE.FUEL_TANK,
     tankOptions: { capacity: 100000 },
   }
 
@@ -66,14 +67,16 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
    * @param options Ship options object
    */
   buildFishingShip(name: string, options?: Partial<ShipOptions>): FishingShip {
-    return this._build(
+    const ship = this._build(
       name,
       FishingShip,
       this.normalizeOpts({
         tankOptions: { capacity: 750 },
       }, options),
-      
     )
+    // Fishing ships are civilians, so we don't want it to be able to target stuff
+    ship.setTargetingSystem(Targeting.getInstance(ship, Targeting.TYPE.NULL))
+    return ship
   }
   /**
    * Create a Corvette class military ship.
@@ -85,8 +88,8 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
       name,
       Corvette,
       this.normalizeOpts({
-        engine: EngineType.STEAM,
-        weapon: WeaponType.TORPEDO,
+        engine: Engine.TYPE.STEAM,
+        weapon: Weapon.TYPE.TORPEDO,
         tankOptions: { capacity: 5000 },
       }, options),
     )
@@ -101,8 +104,8 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
       name,
       Destroyer,
       this.normalizeOpts({
-        engine: EngineType.DIESEL,
-        weapon: WeaponType.TORPEDO,
+        engine: Engine.TYPE.DIESEL,
+        weapon: Weapon.TYPE.TORPEDO,
         tankOptions: { capacity: 10000 },
       }, options),
     )
@@ -117,8 +120,8 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
       name,
       Cruiser,
       this.normalizeOpts({
-        engine: EngineType.STEAM,
-        weapon: WeaponType.CANNON,
+        engine: Engine.TYPE.STEAM,
+        weapon: Weapon.TYPE.CANNON,
         tankOptions: { capacity: 50000 },
       }, options),
     )
@@ -133,8 +136,8 @@ export class Shipyard implements GameEntityFactory<Ship, ShipOptions, ShipType> 
       name,
       Battleship,
       this.normalizeOpts({
-        engine: EngineType.NUCLEAR,
-        weapon: WeaponType.MISSILE,
+        engine: Engine.TYPE.NUCLEAR,
+        weapon: Weapon.TYPE.MISSILE,
         tankOptions: { capacity: 100000 },
       }, options),
     )

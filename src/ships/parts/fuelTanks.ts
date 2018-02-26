@@ -10,11 +10,18 @@ export interface FuelTankOptions {
   capacity: number
 }
 
+export enum TanksType {
+  FUEL_TANK = 'Fuel Tank',
+}
+
 /**
  * A Fuel tank contains and provide fuel.
  * A new FuelTank is always full.
  */
 export class FuelTank extends Part {
+
+  static TYPE = TanksType
+
   __type: TanksType = TanksType.FUEL_TANK
 
   private fuel: FuelState
@@ -172,10 +179,6 @@ export class InfiniteTank extends FuelState {
 
 export const FuelTanks = {
   FuelTank,
-}
-
-export enum TanksType {
-  FUEL_TANK = 'Fuel Tank',
 }
 
 

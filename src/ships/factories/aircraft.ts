@@ -1,5 +1,5 @@
 import GameEntityFactory from './factory'
-import { PartsVendor, TanksType, WeaponType, EngineType } from '../parts'
+import { PartsVendor, TanksType, Weapon, Engine } from '../parts'
 
 import {
   Aircraft,
@@ -14,8 +14,8 @@ import {
 export class AircraftFactory implements GameEntityFactory<Aircraft, AircraftOptions, AircraftType> {
   
   static defaultOptions: AircraftOptions = {
-    engine: EngineType.DIESEL,
-    weapon: WeaponType.MISSILE,
+    engine: Engine.TYPE.DIESEL,
+    weapon: Weapon.TYPE.MISSILE,
     fuelTank: TanksType.FUEL_TANK,
     tankOptions: { capacity: 200 },
   }

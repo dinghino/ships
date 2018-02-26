@@ -1,9 +1,20 @@
 import { Part } from './parts'
 
+export enum EngineType {
+  SAILS = 'SAILS',
+  STEAM = 'STEAM',
+  DIESEL = 'DIESEL',
+  NUCLEAR = 'NUCLEAR',
+}
+
+
 /**
  * Base class for a Ship Engine, part required for a ship to move
  */
 export abstract class Engine extends Part {
+
+  static TYPE = EngineType
+
   abstract __type: EngineType
   constructor(
     manufacturer: string,
@@ -65,11 +76,3 @@ export const Engines = {
   DieselEngine,
   NuclearEngine,
 }
-
-export enum EngineType {
-  SAILS = 'SAILS',
-  STEAM = 'STEAM',
-  DIESEL = 'DIESEL',
-  NUCLEAR = 'NUCLEAR',
-}
-

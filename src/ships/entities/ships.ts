@@ -2,6 +2,9 @@ import Entity from './entity'
 import Vehicle, { VehicleOptions, VehicleConstructor, VehicleInfo } from './vehicle'
 import { PartsProvider } from '../parts/vendors'
 
+import { MovingStrategy } from '../systems'
+
+
 import { PartJSON } from '../parts/parts'
 
 export interface ShipOptions extends VehicleOptions {
@@ -15,30 +18,24 @@ export interface ShipInfo extends VehicleInfo {
 export interface ShipConstructor extends VehicleConstructor<Ship, ShipOptions> {
 }
 
+export enum ShipType {
+  CORVETTE = 'CORVETTE',
+  DESTROYER = 'DESTROYER',
+  CRUISER = 'CRUISER',
+  BATTLESHIP = 'BATTLESHIP',
+  FISHING = 'FISHING SHIP',
+}
+
 export abstract class Ship extends Vehicle {
+
+  static TYPE = ShipType
+
   type: 'ship' = 'ship'
   abstract __type: ShipType
 
-  protected target: Entity
-
   constructor(name: string, vendor: PartsProvider, options: ShipOptions) {
     super(name, vendor, options)
-  }
-
-  hasTarget() { return !!this.target }
-
-  setTarget(target: Entity): Entity {
-    this.target = target
-    if (this.target === null) return
-    console.log(`[ x ] The '${this.name}' is targetting '${target.name}'.`)
-    return target
-  }
-
-  chooseTarget(targets: Entity[]): Entity {
-    // remove current ship if present in the options
-    targets = targets.filter(target => target !== this)
-    const target = targets[Math.floor(Math.random() * targets.length)]
-    return this.setTarget(target)
+    this.moveStrategy = MovingStrategy.getInstance(this, MovingStrategy.TYPE.SAIL)
   }
 
   attack(target?: Entity) {
@@ -54,16 +51,6 @@ export abstract class Ship extends Vehicle {
         this.move()
       }
     }
-  }
-
-  move(direction?: string) {
-    const speed = `at ${this.topSpeed} mph.`
-    if (direction)
-      console.log(`[ > ] The '${this.name}' is moving ${direction} ${speed}`)
-    else if (this.target)
-      console.log(`[ ! ] The '${this.name}' is moving toward the '${this.target.name}' at ${speed}`)
-    else
-      console.log(`[ ? ] The '${this.name}' is moving in a search pattern at ${speed}`)
   }
 
   get info(): ShipInfo {
@@ -115,11 +102,4 @@ export const Ships = {
   Cruiser,
   Battleship,
   FishingShip,
-}
-export enum ShipType {
-  CORVETTE = 'CORVETTE',
-  DESTROYER = 'DESTROYER',
-  CRUISER = 'CRUISER',
-  BATTLESHIP = 'BATTLESHIP',
-  FISHING = 'FISHING SHIP',
 }
