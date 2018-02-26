@@ -41,7 +41,7 @@ export class ActiveTargeting extends Targeting {
   setTarget(target: Entity): Entity {
     this.target = target
     if (this.target === null) return
-    console.log(`[ x ] '${this.entity.name}' is targetting '${target.name}'.`)
+    console.log(`[ x ] The '${this.entity.name}' is targetting '${target.name}'.`)
     return target
   }
 }
